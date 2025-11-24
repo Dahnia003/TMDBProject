@@ -119,6 +119,11 @@ def normalize_results(results: List[Dict[str, Any]], genre_map: Dict[int, str]) 
         date = r.get("release_date") or r.get("first_air_date")
         genre_ids = r.get("genre_ids") or []
         genres = [genre_map.get(gid, str(gid)) for gid in genre_ids]
+        origin_country = r.get("origin_country")
+        if isinstance(origin_country, list) and origin_country:
+            origin_country_code = origin_country[0]   # for example "US"
+        else:
+            origin_country_code = None
         rows.append(
             {
                 "id": r.get("id"),
@@ -129,6 +134,7 @@ def normalize_results(results: List[Dict[str, Any]], genre_map: Dict[int, str]) 
                 "vote_average": r.get("vote_average"),
                 "vote_count": r.get("vote_count"),
                 "original_language": r.get("original_language"),
+                "origin_country_code": origin_country_code,
                 "genres": "; ".join(genres),
             }
         )
